@@ -11,7 +11,7 @@
 1. [Dependencias Requeridas](#habilitar-eureka-server)
 2. [Habilitar Eureka Server](#habilitar-eureka-server)
 3. [Impotar modulo JAXB](#impotar-modulo-jaxb)
-4. [Configurar application.properties](#configurar-application.properties)
+4. [Configurar archivo application](#configurar-archivo-application)
 
 ---
 
@@ -51,7 +51,7 @@
 
 ---
 
-### Configurar application.properties
+### Configurar archivo application
 
 <div class=text-justify>
     Se debe de configurar nuestro servidor Eureka de la siguiente forma:
