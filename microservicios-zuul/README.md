@@ -1,9 +1,9 @@
-# Microservicio Eureka
+# Microservicio Zuul
 
 **Descripción**
 
 <div class=text-justify>
-    En este repositorio te enseño a como crear el microservicio alumno
+    En este repositorio te enseño a como implementar un api gateway con Zuul.
 </div>
 
 ## Indice
