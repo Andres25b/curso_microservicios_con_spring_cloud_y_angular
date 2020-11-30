@@ -14,6 +14,7 @@
 4. [Creacion de repository](#creacion-de-repository)
 5. [Creacion de service](#creacion-de-service)
 6. [Creacion de controller](#creacion-de-controller)
+7. [Habilitar Eureka Discovery Cliente](#habilitar-eureka-discovery-cliente)
 
 ---
 
@@ -327,3 +328,48 @@
             return ResponseEntity.noContent().build();
         }
     }
+
+---
+
+### Habilitar Eureka Discovery Cliente
+
+<div class=text-justify>
+    En la clase principal, agregaremos la anotación @EnableEurekaClient.
+</div>
+
+    package com.formacionbdi.microservicios.app.usuarios;
+
+    import org.springframework.boot.SpringApplication;
+    import org.springframework.boot.autoconfigure.SpringBootApplication;
+    import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+
+    @EnableEurekaClient
+    @SpringBootApplication
+    public class MicroserviciosUsuariosApplication {
+
+        public static void main(String[] args) {
+            SpringApplication.run(MicroserviciosUsuariosApplication.class, args);
+        }
+
+    }
+
+<div class=text-justify>
+    Acontinuacion configuramos nuestro archivo application.properties.
+</div>
+
+    # Configurar Eureka Client
+    spring.application.name=microservicio-usuarios
+    server.port=${PORT:0}
+    eureka.instance.instance-id=${spring.application.name}:${random.value}
+
+    # Ruta de Ureka
+    eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+
+    # Configuracion Mysql y herramientas de developer
+    spring.datasource.url=jdbc:mysql://localhost:3306/db_microservicios_examenes?useSSL=false&serverTimezone=UTC&useLegacyDateTimeCode=false
+    spring.datasource.username=root
+    spring.datasource.password=15106077b
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+    spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+    spring.jpa.generate-ddl=true
+    logging.level.org.hibernate.SQL=debug
