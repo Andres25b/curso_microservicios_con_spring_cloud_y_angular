@@ -1,4 +1,4 @@
-package com.formacionbdi.microservicios.app.usuarios.entity;
+package com.formacionbdi.microservicios.commons.alumnos.entity;
 
 import java.io.Serializable;
 import java.util.Date;
