@@ -184,19 +184,10 @@
 
     package com.formacionbdi.microservicios.app.usuarios.service;
 
-    import java.util.Optional;
-
     import com.formacionbdi.microservicios.app.usuarios.entity.Alumno;
+    import com.formacionbdi.microservicios.commons.services.ICommonService;
 
-    public interface IAlumnoService {
-
-        public Iterable<Alumno> findAll();
-
-        public Optional<Alumno> findById(Long id);
-
-        public Alumno save(Alumno alumno);
-
-        public void deleteById(Long id);
+    public interface IAlumnoService extends ICommonService<Alumno> {
 
     }
 
@@ -209,44 +200,16 @@
 
     package com.formacionbdi.microservicios.app.usuarios.service;
 
-    import java.util.Optional;
 
-    import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
-    import org.springframework.transaction.annotation.Transactional;
 
     import com.formacionbdi.microservicios.app.usuarios.entity.Alumno;
     import com.formacionbdi.microservicios.app.usuarios.repository.IAlumnoRepository;
+    import com.formacionbdi.microservicios.commons.services.CommonServiceImpl;
 
     @Service
-    public class AlumnoServiceImpl implements IAlumnoService {
+    public class AlumnoServiceImpl extends CommonServiceImpl<Alumno, IAlumnoRepository> implements IAlumnoService {
 
-        @Autowired
-        private IAlumnoRepository alumnoRepositoy;
-
-        @Override
-        @Transactional(readOnly = true)
-        public Iterable<Alumno> findAll() {
-            return alumnoRepositoy.findAll();
-        }
-
-        @Override
-        @Transactional(readOnly = true)
-        public Optional<Alumno> findById(Long id) {
-            return alumnoRepositoy.findById(id);
-        }
-
-        @Override
-        @Transactional
-        public Alumno save(Alumno alumno) {
-            return alumnoRepositoy.save(alumno);
-        }
-
-        @Override
-        @Transactional
-        public void deleteById(Long id) {
-            alumnoRepositoy.deleteById(id);
-        }
 
     }
 
@@ -265,67 +228,33 @@
 
     import java.util.Optional;
 
-    import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;
-    import org.springframework.web.bind.annotation.DeleteMapping;
-    import org.springframework.web.bind.annotation.GetMapping;
     import org.springframework.web.bind.annotation.PathVariable;
-    import org.springframework.web.bind.annotation.PostMapping;
     import org.springframework.web.bind.annotation.PutMapping;
     import org.springframework.web.bind.annotation.RequestBody;
     import org.springframework.web.bind.annotation.RestController;
 
     import com.formacionbdi.microservicios.app.usuarios.entity.Alumno;
     import com.formacionbdi.microservicios.app.usuarios.service.IAlumnoService;
+    import com.formacionbdi.microservicios.commons.controllers.CommonController;
 
     @RestController
-    public class AlumnoController {
-
-        @Autowired
-        private IAlumnoService alumnoService;
-
-        @GetMapping
-        public ResponseEntity<?> listar() {
-            return ResponseEntity.ok().body(alumnoService.findAll());
-        }
-
-        @GetMapping("/{id}")
-        public ResponseEntity<?> ver(@PathVariable Long id) {
-            Optional<Alumno> alumno = alumnoService.findById(id);
-
-            if (alumno.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            return ResponseEntity.ok(alumno.get());
-        }
-
-        @PostMapping
-        public ResponseEntity<?> crear(@RequestBody Alumno alumno) {
-            Alumno alumnoDB = alumnoService.save(alumno);
-            return ResponseEntity.status(HttpStatus.CREATED).body(alumnoDB);
-        }
+    public class AlumnoController extends CommonController<Alumno, IAlumnoService> {
 
         @PutMapping("/{id}")
         public ResponseEntity<?> editar(@RequestBody Alumno alumno, @PathVariable Long id) {
-            Optional<Alumno> alumnoU = alumnoService.findById(id);
-            if (alumnoU.isEmpty()) {
+            Optional<Alumno> o = service.findById(id);
+            if (o.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
 
-            Alumno alumnoDb = alumnoU.get();
+            Alumno alumnoDb = o.get();
             alumnoDb.setNombre(alumno.getNombre());
             alumnoDb.setApellido(alumno.getApellido());
             alumnoDb.setEmail(alumno.getEmail());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(alumnoService.save(alumnoDb));
-        }
-
-        @DeleteMapping("/{id}")
-        public ResponseEntity<?> eliminar(@PathVariable Long id) {
-            alumnoService.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.save(alumnoDb));
         }
     }
 
