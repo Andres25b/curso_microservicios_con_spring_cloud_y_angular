@@ -79,3 +79,6 @@
     # Enrutar nuestros servicios
     zuul.routes.usuarios.service-id=microservicio-usuarios
     zuul.routes.usuarios.path=/api/alumnos/**
+
+    zuul.routes.cursos.service-id=microservicio-cursos
+    zuul.routes.cursos.path=/api/cursos/**
